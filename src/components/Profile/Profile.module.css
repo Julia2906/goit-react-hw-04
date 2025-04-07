@@ -1,0 +1,68 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 306px;
+  border: 2px solid black;
+  border-radius: 2%;
+  background-color: #f4f5f7;
+  margin-top: 20px;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+.userData {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: rgba(59, 59, 59, 1);
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: black;
+}
+
+.tag {
+  font-size: 18px;
+  font-weight: 400;
+  color: #87827b;
+}
+
+.location {
+  font-size: 18px;
+  font-weight: 400;
+  color: #87827b;
+}
+
+.list {
+  display: flex;
+  flex-direction: row;
+  background-color: #cccccb;
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  width: 60px;
+  font-size: 18px;
+  color: black;
+  border: 1px solid #87827b;
+  border-radius: 2%;
+  overflow: hidden;
+}
