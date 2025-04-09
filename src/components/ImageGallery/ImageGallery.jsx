@@ -1,13 +1,14 @@
 import ImageCard from '../ImageCard/ImageCard';
 import css from './ImageGallery.module.css';
 
-const ImageGallery = ({ items }) => {
+const ImageGallery = ({ items, openModal }) => {
   return (
     <ul>
-      {/* Набір елементів списку із зображеннями */}
-      <li>
-        <ImageCard />
-      </li>
+      {items.map(item => (
+        <li key={item.id} onClick={() => openModal(item)}>
+          <ImageCard image={item} />
+        </li>
+      ))}
     </ul>
   );
 };

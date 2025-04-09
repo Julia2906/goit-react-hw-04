@@ -1,4 +1,5 @@
 import css from './SearchBar.module.css';
+import toast from 'react-hot-toast';
 
 const SearchBar = ({ onSearch }) => {
   const handleSubmit = evt => {
@@ -6,8 +7,8 @@ const SearchBar = ({ onSearch }) => {
     const form = evt.target;
     const query = form.elements.query.value;
 
-    if (form.elements.query.value.trim() === '') {
-      alert('Please enter search term!');
+    if (query.trim() === '') {
+      toast.error('Please enter a search query!');
       return;
     }
     onSearch(query);

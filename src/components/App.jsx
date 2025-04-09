@@ -5,42 +5,78 @@ import SearchBar from './SearchBar/SearchBar';
 import Loader from './Loader/Loader';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import { useState } from 'react';
+import { fetchPhotos } from './FetchPhotos/FetchPhotos';
+import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
+import ImageModal from './ImageModal/ImageModal';
+import Modal from 'react-modal';
 
 const App = () => {
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
 
-  const ACCESS_KEY = 'sQIAw_PjrocTEAEhNduKVDQuhpihpkrKilxS6kdPVJ4';
-
-  const handleSearch = async query => {
-    try {
-      setPhotos([]);
-      setError(false);
-      setLoading(true);
-      const data = await fetchPhotos('https://api.unsplash.com/search/photos', {
-        params: {
-          query,
-          per_page: 15,
-        },
-        headers: {
-          Authorization: `Client-ID ${ACCESS_KEY}`,
-        },
-      });
-      setPhotos(data);
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
+  const handleSearch = query => {
+    setSearchTerm(query);
+    setPage(1);
+    setPhotos([]);
   };
+
+  useEffect(() => {
+    if (searchTerm === '') {
+      return;
+    }
+    async function getData() {
+      try {
+        setError(false);
+        setLoading(true);
+        const data = await fetchPhotos(searchTerm, page);
+        setPhotos(prevPhotos => [...prevPhotos, ...data]);
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getData();
+  }, [page, searchTerm]);
+
+  const loadMorePhotos = () => {
+    setPage(prevPage => prevPage + 1);
+  };
+
+  function openModal(image) {
+    setSelectedImage(image);
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+    setSelectedImage(null);
+  }
 
   return (
     <>
       <SearchBar onSearch={handleSearch} />
-      {loading && <Loader />}
       {error && <ErrorMessage />}
-      {photos.length > 0 && <ImageGallery items={photos} />}
+      {photos.length > 0 && (
+        <ImageGallery items={photos} openModal={openModal} />
+      )}
+      {loading && <Loader />}
+      {photos.length > 0 && !loading && (
+        <LoadMoreBtn onLoadMore={loadMorePhotos} />
+      )}
+      {modalIsOpen && selectedImage && (
+        <ImageModal
+          isOpen={modalIsOpen}
+          onClose={closeModal}
+          image={selectedImage}
+        />
+      )}
     </>
   );
 };

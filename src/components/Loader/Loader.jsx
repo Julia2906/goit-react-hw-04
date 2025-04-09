@@ -1,5 +1,7 @@
+import { ClipLoader } from 'react-spinners';
+
 const Loader = () => {
-  return;
+  return <ClipLoader />;
 };
 
 export default Loader;
