@@ -1,9 +1,9 @@
 const ImageCard = ({ image }) => {
-  const { urls, alt_description } = image;
+  const { urls, description } = image;
 
   return (
     <div>
-      <img src={urls.small} alt={alt_description} />
+      <img src={urls.small} alt={description} />
     </div>
   );
 };

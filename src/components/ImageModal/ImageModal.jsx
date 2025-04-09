@@ -1,26 +1,19 @@
-import { useEffect } from 'react';
 import Modal from 'react-modal';
+import React from 'react';
+import css from './ImageModal.module.css';
+Modal.setAppElement('#root');
 
-const ImageModal = ({ isOpen, onClose, image }) => {
-  const { urls, alt_description } = image;
-
-  useEffect(() => {
-    const handleEscape = event => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-    };
-  }, [onClose]);
+const ImageModal = ({ onClose, image }) => {
+  const isOpen = Boolean(image);
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose}>
-      <div className="modal-body">
-        <img src={urls.regular} alt={alt_description} className="modal-image" />
-      </div>
+      {image && (
+        <>
+          <button onClick={onClose}>X</button>
+          <img src={image.urls.regular} alt={image.description} />
+        </>
+      )}
     </Modal>
   );
 };

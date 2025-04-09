@@ -1,5 +1,6 @@
 import css from './SearchBar.module.css';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
 
 const SearchBar = ({ onSearch }) => {
   const handleSubmit = evt => {

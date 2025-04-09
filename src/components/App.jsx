@@ -5,20 +5,19 @@ import SearchBar from './SearchBar/SearchBar';
 import Loader from './Loader/Loader';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import { useState } from 'react';
-import { fetchPhotos } from './FetchPhotos/FetchPhotos';
+import { fetchPhotos } from './FetchPhotos/fetchPhotos';
 import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './ImageModal/ImageModal';
-import Modal from 'react-modal';
+import toast, { Toaster } from 'react-hot-toast';
 
 const App = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
+
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleSearch = query => {
     setSearchTerm(query);
@@ -27,56 +26,56 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (searchTerm === '') {
+    if (!searchTerm) {
       return;
     }
-    async function getData() {
+
+    const fetchImages = async () => {
       try {
-        setError(false);
         setLoading(true);
-        const data = await fetchPhotos(searchTerm, page);
-        setPhotos(prevPhotos => [...prevPhotos, ...data]);
-      } catch (error) {
+        setError(false);
+        const images = await fetchPhotos(searchTerm, page);
+        if (images.length === 0) {
+          toast.error('No images found!');
+          return;
+        }
+        setPhotos(prevImages => {
+          return page === 1 ? images : [...prevImages, ...images];
+        });
+      } catch {
         setError(true);
+        toast.error('Error! Please, reload page!');
       } finally {
         setLoading(false);
       }
-    }
-    getData();
-  }, [page, searchTerm]);
+    };
+
+    fetchImages();
+  }, [searchTerm, page]);
 
   const loadMorePhotos = () => {
-    setPage(prevPage => prevPage + 1);
+    setPage(page + 1);
   };
 
   function openModal(image) {
     setSelectedImage(image);
-    setIsOpen(true);
   }
 
   function closeModal() {
-    setIsOpen(false);
     setSelectedImage(null);
   }
 
   return (
     <>
+      <Toaster />
       <SearchBar onSearch={handleSearch} />
       {error && <ErrorMessage />}
-      {photos.length > 0 && (
-        <ImageGallery items={photos} openModal={openModal} />
-      )}
+      <ImageGallery items={photos} openModal={openModal} />
       {loading && <Loader />}
       {photos.length > 0 && !loading && (
         <LoadMoreBtn onLoadMore={loadMorePhotos} />
       )}
-      {modalIsOpen && selectedImage && (
-        <ImageModal
-          isOpen={modalIsOpen}
-          onClose={closeModal}
-          image={selectedImage}
-        />
-      )}
+      <ImageModal onClose={closeModal} image={selectedImage} />
     </>
   );
 };
