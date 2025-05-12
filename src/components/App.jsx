@@ -5,7 +5,7 @@ import SearchBar from './SearchBar/SearchBar';
 import Loader from './Loader/Loader';
 import ErrorMessage from './ErrorMessage/ErrorMessage';
 import { useState } from 'react';
-import { fetchPhotos } from './FetchPhotos/fetchPhotos';
+import { fetchPhotos } from './FetchPhotos/FetchPhotos';
 import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
 import ImageModal from './ImageModal/ImageModal';
 import toast, { Toaster } from 'react-hot-toast';
