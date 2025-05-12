@@ -7,11 +7,17 @@ const ImageModal = ({ onClose, image }) => {
   const isOpen = Boolean(image);
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose}>
+    <Modal className={css.modal} isOpen={isOpen} onRequestClose={onClose}>
       {image && (
         <>
-          <button onClick={onClose}>X</button>
-          <img src={image.urls.regular} alt={image.description} />
+          <button className={css.button} onClick={onClose}>
+            x
+          </button>
+          <img
+            className={css.img}
+            src={image.urls.regular}
+            alt={image.description}
+          />
         </>
       )}
     </Modal>
